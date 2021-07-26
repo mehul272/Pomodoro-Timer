@@ -1,5 +1,6 @@
-from tkinter import *
+ from tkinter import *
 import math
+import tkinter.messagebox
 
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
@@ -7,9 +8,9 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 25
-SHORT_BREAK_MIN = 5
-LONG_BREAK_MIN = 20
+WORK_MIN = 5
+SHORT_BREAK_MIN = 2
+LONG_BREAK_MIN = 3
 reps = 0
 timer = None
 
@@ -17,6 +18,8 @@ timer = None
 
 def reset_timer():
     global reps
+    start_button.config(state="normal")
+    reset_button.config(state="disabled")
     window.after_cancel(timer)
     canvas.itemconfig(timer_text,text="00:00")
     heading_label.config(text="Timer", fg=GREEN)
@@ -27,18 +30,24 @@ def reset_timer():
 
 def start_timer():
     global reps
-    work_sec = WORK_MIN * 60
-    short_break_sec = SHORT_BREAK_MIN * 60
-    long_break_sec = LONG_BREAK_MIN * 60
+    start_button.config(state="disabled")
+    reset_button.config(state="normal")
+    work_sec = WORK_MIN * 1
+    short_break_sec = SHORT_BREAK_MIN * 1
+    long_break_sec = LONG_BREAK_MIN * 1
     reps += 1
 
     if reps % 8 == 0:
+        tkinter.messagebox.showinfo(title="Break", message="Long Break")
         heading_label.config(text="Break",fg =PINK)
         count_down(long_break_sec)
     elif reps % 2 ==0:
+        tkinter.messagebox.showinfo(title="Break", message="Short Break")
         heading_label.config(text="Break",fg=GREEN)
         count_down(short_break_sec)
     else:
+        tkinter.messagebox.showinfo(title="Work", message="Start Working")
+        window.attributes('-topmost', 0)
         heading_label.config(text="Work" ,fg=RED)
         count_down(work_sec)
 
@@ -91,6 +100,7 @@ reset_button.grid(column=2,row=2)
 #Checkbutton
 check_marks = Label(fg=GREEN,bg=YELLOW)
 check_marks.grid(column=1,row=3)
+
 
 
 window.mainloop()
